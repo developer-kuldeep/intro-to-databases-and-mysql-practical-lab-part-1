@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro to Databases & MySQL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; line-height: 1.6; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        
+        .watermark {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 5rem; font-weight: 900; color: rgba(15, 23, 42, 0.03); z-index: -1;
+            pointer-events: none; white-space: nowrap; user-select: none;
+        }
+
+        .cmd-block { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .cmd-header { background-color: #1e293b; padding: 10px 16px; font-size: 0.75rem; color: #94a3b8; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between; align-items: center; }
+        .cmd-content { padding: 16px; color: #38bdf8; font-family: 'Fira Code', monospace; font-size: 0.875rem; overflow-x: auto; white-space: pre; }
+        
+        /* SQL specific highlighting inside terminal */
+        .sql-keyword { color: #c084fc; font-weight: bold; }
+        .sql-string { color: #a3e635; }
+        .sql-comment { color: #64748b; font-style: italic; }
+        
+        .btn-copy { background: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 4px 12px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .btn-copy:hover { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
+
+        @media print { 
+            body { background: white; } 
+            .watermark { color: rgba(15, 23, 42, 0.05) !important; print-color-adjust: exact; } 
+            .cmd-block { box-shadow: none; break-inside: avoid; border: 1px solid #ccc; } 
+            .btn-copy { display: none; }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative flex flex-col justify-between">
+
+    <div class="watermark">kuldeephimachal83@gmail.com</div>
+
+    <!-- Navigation Header -->
+    <nav class="border-b border-slate-200 bg-white/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-blue-600 to-indigo-600 p-2 rounded-xl text-white shadow-lg font-bold">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm font-extrabold tracking-tight text-slate-900">DATABASE ENGINEERING</h1>
+                    
+                </div>
+            </div>
+            <div>
+                <span class="px-3 py-1 rounded-full text-[10px] font-mono bg-blue-500/10 text-blue-700 border border-blue-500/20 font-bold">DAY 1: MYSQL & SQL</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        
+        <header class="mb-12 border-b border-slate-200 pb-8 text-center max-w-3xl mx-auto">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">Intro to Databases & MySQL</h1>
+            <p class="text-slate-600 leading-relaxed text-lg">
+                Stop saving data in Excel files! Today we learn the "Why", the "What", and the "How" of enterprise database management using MySQL.
+            </p>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- PART 1: THEORY & CONCEPTS                  -->
+        <!-- ========================================== -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-slate-800 text-white font-mono text-xs font-bold px-3 py-1 rounded">PART 1</span>
+                <h2 class="text-2xl font-bold text-slate-900">The "Why" & The Types of Databases</h2>
+            </div>
+            
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-xl mb-8 shadow-sm">
+                <h3 class="font-bold text-blue-900 text-lg mb-2">Why do we need a Database? (Without vs With)</h3>
+                <p class="text-sm text-blue-800 leading-relaxed">
+                    <strong>Without a Database:</strong> Imagine storing all user data in a `.txt` or Excel file. Only one person can edit it at a time. If the server crashes mid-save, the file corrupts. Searching through 1 million rows of text takes forever.<br><br>
+                    <strong>With a Database:</strong> A Database Management System (DBMS) is specialized software. Thousands of users can query it simultaneously, it has auto-recovery, and searches take milliseconds.
+                </p>
+            </div>
+
+            <h3 class="font-bold text-slate-800 text-lg mb-4">Relational (SQL) vs. Non-Relational (NoSQL)</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Relational -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="text-lg font-bold text-indigo-700 mb-2"><i class="fa-solid fa-table mr-2"></i>Relational (SQL)</h4>
+                    <ul class="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                        <li><strong>Examples:</strong> MySQL, PostgreSQL.</li>
+                        <li><strong>Analogy:</strong> A Strict Filing Cabinet.</li>
+                        <li><strong>Structure:</strong> Strict Tables with Rows & Columns (like Excel).</li>
+                        <li><strong>Rule:</strong> If a table needs 'Name' and 'Age', you CANNOT insert a record with 'Favorite Color'. It rejects bad data.</li>
+                        <li><strong>Best for:</strong> Financial systems, strict inventory, where accuracy is critical.</li>
+                    </ul>
+                </div>
+                <!-- Non-Relational -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="text-lg font-bold text-emerald-700 mb-2"><i class="fa-solid fa-file-code mr-2"></i>Non-Relational (NoSQL)</h4>
+                    <ul class="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                        <li><strong>Examples:</strong> MongoDB, DynamoDB.</li>
+                        <li><strong>Analogy:</strong> A Flexible Magic Box.</li>
+                        <li><strong>Structure:</strong> Flexible JSON Documents.</li>
+                        <li><strong>Rule:</strong> You can throw any data into it. User 1 can have 2 fields, User 2 can have 50 fields. It accepts everything.</li>
+                        <li><strong>Best for:</strong> Social media posts, game data, fast-changing app requirements.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <hr class="border-slate-200 mb-12">
+
+        <!-- ========================================== -->
+        <!-- PART 2: PRACTICAL LAB SETUP                -->
+        <!-- ========================================== -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-indigo-600 text-white font-mono text-xs font-bold px-3 py-1 rounded">PART 2</span>
+                <h2 class="text-2xl font-bold text-slate-900">Installation & Login</h2>
+            </div>
+            <p class="text-sm text-slate-600 mb-4">Run these commands in your Ubuntu/WSL terminal to install the MySQL engine and enter the database shell.</p>
+
+            <div class="cmd-block">
+                <div class="cmd-header"><span>1. Ubuntu Terminal</span> <button class="btn-copy" onclick="copyText('cmd-install')"><i class="fa-regular fa-copy"></i> Copy</button></div>
+                <div class="cmd-content" id="cmd-install"><span class="sql-comment"># Update package list</span>
+sudo apt update
+
+<span class="sql-comment"># Install MySQL Server</span>
+sudo apt install mysql-server -y
+
+<span class="sql-comment"># Login to the MySQL Shell as administrator</span>
+sudo mysql</div>
+            </div>
+            
+            <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl text-sm text-indigo-800">
+                💡 <strong>Look at your terminal!</strong> It no longer says <code>ubuntu@server:~$</code>. It now says <code>mysql></code>. You are now speaking SQL directly to the database engine.
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- PART 3: THE C.R.U.D LAB                    -->
+        <!-- ========================================== -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-emerald-600 text-white font-mono text-xs font-bold px-3 py-1 rounded">PART 3</span>
+                <h2 class="text-2xl font-bold text-slate-900">The C.R.U.D. Practical Lab</h2>
+            </div>
+            <p class="text-sm text-slate-600 mb-6">Almost every action a backend application performs falls into four categories: <strong>C</strong>reate, <strong>R</strong>ead, <strong>U</strong>pdate, and <strong>D</strong>elete. Let's build a company database step-by-step.</p>
+
+            <!-- CREATE -->
+            <div class="mb-8">
+                <h3 class="font-bold text-slate-800 text-lg mb-2">1. CREATE (Database & Table)</h3>
+                <p class="text-xs text-slate-500 mb-2">First, we create a Database (the main folder). Then, we create a Table (the sheet inside the folder) with strict rules.</p>
+                <div class="cmd-block">
+                    <div class="cmd-header"><span>MySQL Shell</span> <button class="btn-copy" onclick="copyText('cmd-create')"><i class="fa-regular fa-copy"></i> Copy</button></div>
+                    <div class="cmd-content" id="cmd-create"><span class="sql-comment">-- Create the main database</span>
+<span class="sql-keyword">CREATE DATABASE</span> meander_company;
+
+<span class="sql-comment">-- Tell MySQL we want to work inside this specific database</span>
+<span class="sql-keyword">USE</span> meander_company;
+
+<span class="sql-comment">-- Create a table with 3 strict columns</span>
+<span class="sql-keyword">CREATE TABLE</span> employees (
+    id <span class="sql-keyword">INT PRIMARY KEY</span>,
+    name <span class="sql-keyword">VARCHAR</span>(50),
+    department <span class="sql-keyword">VARCHAR</span>(50)
+);</div>
+                </div>
+            </div>
+
+            <!-- INSERT -->
+            <div class="mb-8">
+                <h3 class="font-bold text-slate-800 text-lg mb-2">2. INSERT (Adding Data)</h3>
+                <p class="text-xs text-slate-500 mb-2">Now let's add 3 employees into our new table.</p>
+                <div class="cmd-block">
+                    <div class="cmd-header"><span>MySQL Shell</span> <button class="btn-copy" onclick="copyText('cmd-insert')"><i class="fa-regular fa-copy"></i> Copy</button></div>
+                    <div class="cmd-content" id="cmd-insert"><span class="sql-keyword">INSERT INTO</span> employees (id, name, department) <span class="sql-keyword">VALUES</span> (1, <span class="sql-string">'Rahul'</span>, <span class="sql-string">'DevOps'</span>);
+<span class="sql-keyword">INSERT INTO</span> employees (id, name, department) <span class="sql-keyword">VALUES</span> (2, <span class="sql-string">'Priya'</span>, <span class="sql-string">'Frontend'</span>);
+<span class="sql-keyword">INSERT INTO</span> employees (id, name, department) <span class="sql-keyword">VALUES</span> (3, <span class="sql-string">'Amit'</span>, <span class="sql-string">'DevOps'</span>);</div>
+                </div>
+            </div>
+
+            <!-- READ -->
+            <div class="mb-8">
+                <h3 class="font-bold text-slate-800 text-lg mb-2">3. READ (The SELECT Command)</h3>
+                <p class="text-xs text-slate-500 mb-2">How we ask the database to show us information.</p>
+                <div class="cmd-block">
+                    <div class="cmd-header"><span>MySQL Shell</span> <button class="btn-copy" onclick="copyText('cmd-read')"><i class="fa-regular fa-copy"></i> Copy</button></div>
+                    <div class="cmd-content" id="cmd-read"><span class="sql-comment">-- Show me EVERYTHING (*) inside the employees table</span>
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees;
+
+<span class="sql-comment">-- Show me ONLY the names of people who work in DevOps</span>
+<span class="sql-keyword">SELECT</span> name <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> department = <span class="sql-string">'DevOps'</span>;</div>
+                </div>
+            </div>
+
+            <!-- UPDATE -->
+            <div class="mb-8">
+                <h3 class="font-bold text-slate-800 text-lg mb-2">4. UPDATE (Modifying Data)</h3>
+                <p class="text-xs text-slate-500 mb-2">Rahul got promoted to a Manager role. We need to update his record.</p>
+                <div class="cmd-block">
+                    <div class="cmd-header"><span>MySQL Shell</span> <button class="btn-copy" onclick="copyText('cmd-update')"><i class="fa-regular fa-copy"></i> Copy</button></div>
+                    <div class="cmd-content" id="cmd-update"><span class="sql-keyword">UPDATE</span> employees 
+<span class="sql-keyword">SET</span> department = <span class="sql-string">'Manager'</span> 
+<span class="sql-keyword">WHERE</span> id = 1;
+
+<span class="sql-comment">-- Verify the change</span>
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees;</div>
+                </div>
+            </div>
+
+            <!-- DELETE -->
+            <div class="mb-8">
+                <h3 class="font-bold text-slate-800 text-lg mb-2">5. DELETE (Removing Data)</h3>
+                <p class="text-xs text-slate-500 mb-2">Amit left the company. We need to remove his row.</p>
+                <div class="cmd-block">
+                    <div class="cmd-header"><span>MySQL Shell</span> <button class="btn-copy" onclick="copyText('cmd-delete')"><i class="fa-regular fa-copy"></i> Copy</button></div>
+                    <div class="cmd-content" id="cmd-delete"><span class="sql-keyword">DELETE FROM</span> employees 
+<span class="sql-keyword">WHERE</span> name = <span class="sql-string">'Amit'</span>;
+
+<span class="sql-comment">-- Verify he was removed</span>
+<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees;</div>
+                </div>
+            </div>
+            
+            <!-- EXIT -->
+            <div class="mb-8">
+                <h3 class="font-bold text-slate-800 text-lg mb-2">6. EXIT</h3>
+                <div class="cmd-block">
+                    <div class="cmd-header"><span>MySQL Shell</span> <button class="btn-copy" onclick="copyText('cmd-exit')"><i class="fa-regular fa-copy"></i> Copy</button></div>
+                    <div class="cmd-content" id="cmd-exit"><span class="sql-comment">-- Leave the MySQL shell and return to regular Ubuntu</span>
+exit;</div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- THE DANGER ZONE -->
+        <section class="mb-12">
+            <div class="bg-red-50 border border-red-200 p-6 rounded-2xl shadow-sm">
+                <h2 class="text-xl font-black text-red-700 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> The Danger Zone
+                </h2>
+                <p class="text-sm text-slate-700 mb-4 font-semibold">
+                    In SQL, if you forget to write the <code class="bg-white px-1 text-red-600 border border-red-200 rounded">WHERE</code> clause on an Update or Delete command, <strong>it will apply to EVERY SINGLE ROW in the table!</strong>
+                </p>
+                <div class="bg-slate-900 p-4 rounded-lg font-mono text-xs text-rose-300 overflow-x-auto whitespace-pre">
+<span class="text-slate-500 italic">-- If you type this:</span>
+<span class="text-purple-400 font-bold">UPDATE</span> employees <span class="text-purple-400 font-bold">SET</span> department = <span class="text-green-400">'Fired'</span>;
+
+<span class="text-slate-500 italic">-- You just fired your entire company because you forgot to specify "WHERE id = 3"!</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 px-4 py-3 bg-teal-500 text-slate-900 font-bold text-xs rounded-xl shadow-lg transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+        <i class="fa-solid fa-check-circle"></i> Command copied to clipboard!
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 py-8 text-center text-slate-500 text-xs bg-white mt-8">
+        <p class="font-bold text-slate-700 uppercase tracking-widest mb-1">Databases Masterclass Guide • Engineered by DevOps Eng KULDEEP</p>
+        <p class="font-mono text-blue-600">kuldeephimachal83@gmail.com</p>
+    </footer>
+
+    <script>
+        function copyText(elementId) {
+            const el = document.getElementById(elementId);
+            
+            // Clone the element to safely remove the comment spans if we wanted to, 
+            // but for this lab, copying the comments is actually fine.
+            // We just need to extract the raw text carefully.
+            let textToCopy = el.innerText.trim();
+            
+            // Write to clipboard
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('opacity-0', 'translate-y-4');
+                toast.classList.add('opacity-100', 'translate-y-0');
+
+                // Hide toast after 2 seconds
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-4');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
